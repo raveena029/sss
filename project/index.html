@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNU-Mart Supermarket Automation System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <h1>SNU-Mart</h1>
+                <span>Supermarket Automation System</span>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" id="nav-checkout">Checkout</a></li>
+                    <li><a href="#" id="nav-inventory">Inventory</a></li>
+                    <li><a href="#" id="nav-products">Products</a></li>
+                    <li><a href="#" id="nav-customers">Customers</a></li>
+                    <li><a href="#" id="nav-reports">Reports</a></li>
+                    <li><a href="#" id="nav-store-layout">Store Layout</a></li>
+                </ul>
+            </nav>
+            <div class="user-info">
+                <span id="current-user">Employee Name</span>
+                <a href="#" id="logout">Logout</a>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <!-- Login Section -->
+            <section id="login-section" class="section">
+                <div class="login-container">
+                    <h2>Login to SNU-Mart</h2>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" placeholder="Enter username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Enter password">
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select id="role">
+                                <option value="employee">Employee</option>
+                                <option value="manager">Manager</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Checkout Section -->
+            <section id="checkout-section" class="section hidden">
+                <h2>Checkout</h2>
+                <div class="checkout-container">
+                    <div class="product-scan">
+                        <div class="form-group">
+                            <label for="product-id">Product ID</label>
+                            <input type="text" id="product-id" placeholder="Scan or enter product ID">
+                            <button id="add-product" class="btn">Add Product</button>
+                        </div>
+                    </div>
+                    <div class="cart-container">
+                        <h3>Current Cart</h3>
+                        <table id="cart-table">
+                            <thead>
+                                <tr>
+                                    <th>Product ID</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-items">
+                                <!-- Cart items will be added here -->
+                            </tbody>
+                        </table>
+                        <div class="cart-summary">
+                            <div class="summary-item">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">$0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Tax:</span>
+                                <span id="tax-amount">$0.00</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Discounts:</span>
+                                <span id="discount-amount">$0.00</span>
+                            </div>
+                            <div class="summary-item total">
+                                <span>Total:</span>
+                                <span id="total-amount">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="checkout-actions">
+                            <button id="apply-promotion" class="btn">Apply Promotion</button>
+                            <button id="checkout" class="btn btn-primary">Complete Checkout</button>
+                            <button id="clear-cart" class="btn btn-danger">Clear Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Management Section -->
+            <section id="inventory-section" class="section hidden">
+                <h2>Inventory Management</h2>
+                <div class="inventory-controls">
+                    <div class="search-container">
+                        <input type="text" id="inventory-search" placeholder="Search inventory">
+                        <button id="search-inventory-btn" class="btn">Search</button>
+                    </div>
+                    <div class="filter-container">
+                        <select id="category-filter">
+                            <option value="">All Categories</option>
+                            <!-- Categories will be loaded dynamically -->
+                        </select>
+                        <select id="stock-filter">
+                            <option value="">All Stock Levels</option>
+                            <option value="low">Low Stock</option>
+                            <option value="out">Out of Stock</option>
+                            <option value="in">In Stock</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="inventory-table-container">
+                    <table id="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Current Quantity</th>
+                                <th>Threshold</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-items">
+                            <!-- Inventory items will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="inventory-actions">
+                    <button id="add-inventory" class="btn">Add New Item</button>
+                    <button id="reorder-inventory" class="btn btn-primary">Reorder Low Stock</button>
+                </div>
+            </section>
+
+            <!-- Product Management Section -->
+            <section id="product-section" class="section hidden">
+                <h2>Product Management</h2>
+                <div class="product-controls">
+                    <div class="search-container">
+                        <input type="text" id="product-search" placeholder="Search products">
+                        <button id="search-product-btn" class="btn">Search</button>
+                    </div>
+                    <div class="filter-container">
+                        <select id="product-category-filter">
+                            <option value="">All Categories</option>
+                            <!-- Categories will be loaded dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div class="product-table-container">
+                    <table id="product-table">
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Location</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-items">
+                            <!-- Product items will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="product-actions">
+                    <button id="add-product-btn" class="btn">Add New Product</button>
+                    <button id="update-prices-btn" class="btn btn-primary">Update Prices</button>
+                </div>
+            </section>
+
+            <!-- Customer Management Section -->
+            <section id="customer-section" class="section hidden">
+                <h2>Customer Management</h2>
+                <div class="customer-controls">
+                    <div class="search-container">
+                        <input type="text" id="customer-search" placeholder="Search customers">
+                        <button id="search-customer-btn" class="btn">Search</button>
+                    </div>
+                </div>
+                <div class="customer-table-container">
+                    <table id="customer-table">
+                        <thead>
+                            <tr>
+                                <th>Customer ID</th>
+                                <th>Name</th>
+                                <th>Purchase History</th>
+                                <th>Purchase Credits</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customer-items">
+                            <!-- Customer items will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="customer-actions">
+                    <button id="add-customer-btn" class="btn">Add New Customer</button>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports-section" class="section hidden">
+                <h2>Reports & Statistics</h2>
+                <div class="report-controls">
+                    <div class="date-filter">
+                        <label for="start-date">Start Date</label>
+                        <input type="date" id="start-date">
+                        <label for="end-date">End Date</label>
+                        <input type="date" id="end-date">
+                    </div>
+                    <div class="report-type">
+                        <select id="report-type">
+                            <option value="sales">Sales Report</option>
+                            <option value="inventory">Inventory Report</option>
+                            <option value="product">Product Performance</option>
+                            <option value="tax">Tax Report</option>
+                        </select>
+                        <button id="generate-report-btn" class="btn btn-primary">Generate Report</button>
+                    </div>
+                </div>
+                <div id="report-display" class="report-display">
+                    <!-- Report will be displayed here -->
+                </div>
+            </section>
+
+            <!-- Store Layout Section -->
+            <section id="store-layout-section" class="section hidden">
+                <h2>Store Layout</h2>
+                <div class="layout-controls">
+                    <select id="section-select">
+                        <option value="all">All Sections</option>
+                        <!-- Store sections will be loaded dynamically -->
+                    </select>
+                </div>
+                <div id="store-layout-display" class="store-layout-display">
+                    <!-- Store layout will be displayed here -->
+                </div>
+            </section>
+
+            <!-- Invoice Modal -->
+            <div id="invoice-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <div id="invoice-content">
+                        <!-- Invoice will be displayed here -->
+                    </div>
+                    <div class="modal-actions">
+                        <button id="print-invoice" class="btn">Print Invoice</button>
+                        <button id="email-invoice" class="btn">Email Invoice</button>
+                        <button id="close-invoice" class="btn btn-primary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 SNU-Mart. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Mock Data -->
+    <script src="data/products.js"></script>
+    <script src="data/inventory.js"></script>
+    <script src="data/customers.js"></script>
+    <script src="data/promotions.js"></script>
+
+    <!-- Utility Scripts -->
+    <script src="js/utils/dataStore.js"></script>
+    <script src="js/utils/validation.js"></script>
+    <script src="js/utils/helpers.js"></script>
+
+    <!-- Module Scripts -->
+    <script src="js/modules/checkout.js"></script>
+    <script src="js/modules/inventory.js"></script>
+    <script src="js/modules/product.js"></script>
+    <script src="js/modules/customer.js"></script>
+    <script src="js/modules/promotion.js"></script>
+    <script src="js/modules/report.js"></script>
+    <script src="js/modules/invoice.js"></script>
+    <script src="js/modules/tax.js"></script>
+    <script src="js/modules/storeLayout.js"></script>
+
+    <!-- Main App Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>
